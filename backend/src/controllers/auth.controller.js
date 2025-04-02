@@ -112,6 +112,7 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json(updatedUser);
   } catch (error) {
+    console.log("Error in updateProfile: ", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -128,6 +129,7 @@ export const checkAuth = (req, res) => {
       profilePic: user.profilePic
     });
   } catch (error) {
+    console.log("Error in checkAuth: ", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
