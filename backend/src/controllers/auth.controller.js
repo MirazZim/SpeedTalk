@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js"
 import bcryptjs from "bcryptjs";
@@ -92,8 +93,32 @@ export const logout = (req, res) => {
   }
 };
 
+export const updateProfile = async (req, res) => {
+  try {
+    //Validate the presence of a profile picture in the request body.
+    const {profilePic} = req.body;
+    const userId = req.user._id;
+    
+    //if no profile picture is provided
+    if (!profilePic) {
+      return res.status(400).json({ message: "Profile picture is required" });
+    }
+    //Upload the image to Cloudinary and retrieve its secure URL.
+    //Cloudinary is a cloud-based image and video storage service that provides a secure way to store and manage images and videos.
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+
+    //Update the user's profile with the new profile picture URL.
+    const updatedUser = await User.findByIdAndUpdate(userId, { profilePic: uploadResponse.secure_url }, { new: true });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export default {
   signup,
   login,
   logout,
+  updateProfile
 };
