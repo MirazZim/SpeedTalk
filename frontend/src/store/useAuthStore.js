@@ -92,8 +92,10 @@ export const useAuthStore = create((set, get) => ({
 
     const socket = io(BASE_URL);
     socket.connect();
-
     
+    // Store the socket in the state for this we can see in the terminal that a user is disconnected
+    set({ socket: socket });
+
   },
   disconnectSocket: () => {
     if (get().socket?.connected) get().socket.disconnect();
