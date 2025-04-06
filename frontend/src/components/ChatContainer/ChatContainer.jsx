@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useChatStore } from '../../store/useChatStore';
 import ChatHeader from '../ChatHeader/ChatHeader';
 import MessageInput from '../MessageInput/MessageInput';
@@ -13,16 +13,28 @@ const ChatContainer = () => {
         selectedUser,
         subscribeToMessages,
         unsubscribeFromMessages, } = useChatStore();
+
     const { authUser } = useAuthStore();
+    const messageEndRef = useRef(null);
+
+
+
+    // useEffect for messages
     useEffect(() => {
         getMessages(selectedUser._id);
         subscribeToMessages();
         return () => {
             unsubscribeFromMessages();
-        };r
+        }; r
     }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
-    
+    useEffect(() => {
+        if (messageEndRef.current && messages) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
+
+
     if (isMessagesLoading) {
         return (
             <div className="flex-1 flex flex-col overflow-auto">
@@ -51,7 +63,8 @@ const ChatContainer = () => {
                             so the chat bubble will be aligned to the left side of the screen 
                         */
                         className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
-                        
+                        ref={messageEndRef}
+
                     >
                         {/* Chat Image */}
                         <div className=" chat-image avatar">
