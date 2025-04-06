@@ -16,10 +16,13 @@ const ChatContainer = () => {
     const { authUser } = useAuthStore();
     useEffect(() => {
         getMessages(selectedUser._id);
-    }, [selectedUser._id, getMessages]);
+        subscribeToMessages();
+        return () => {
+            unsubscribeFromMessages();
+        };r
+    }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
     
-
     if (isMessagesLoading) {
         return (
             <div className="flex-1 flex flex-col overflow-auto">

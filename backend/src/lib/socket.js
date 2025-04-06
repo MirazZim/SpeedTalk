@@ -11,6 +11,12 @@ const io = new Server(server, {
     },
   });
 
+
+  export function getReceiverSocketId(userId) {
+    return userSocketMap[userId];
+  }
+  
+
   // used to store online users
 // userSocketMap is an object to store the mapping of user id to socket id
 // it is used to emit events to a specific user
