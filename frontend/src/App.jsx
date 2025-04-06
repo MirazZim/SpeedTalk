@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
+
 import HomePage from "./pages/HomePage/HomePage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
@@ -50,7 +50,7 @@ const App = () => {
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
       <Toaster />
-      <Footer />
+      
     </div>
   );
 };
