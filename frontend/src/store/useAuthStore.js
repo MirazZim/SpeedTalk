@@ -90,12 +90,23 @@ export const useAuthStore = create((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    const socket = io(BASE_URL);
+    // Create a socket instance with the user id as a query parameter
+    // so that the server can know who is connected
+    const socket = io(BASE_URL,{
+      query: {
+        userId: authUser._id,
+      },
+    });
     socket.connect();
     
     // Store the socket in the state for this we can see in the terminal that a user is disconnected
     set({ socket: socket });
 
+    // This event is emitted by the server to all the connected clients
+    // with the list of online users
+    socket.on("getOnlineUsers", (userIds) => {
+      set({ onlineUsers: userIds });
+    });
   },
   disconnectSocket: () => {
     if (get().socket?.connected) get().socket.disconnect();
