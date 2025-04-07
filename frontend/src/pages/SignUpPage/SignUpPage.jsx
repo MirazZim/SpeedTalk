@@ -37,7 +37,7 @@ const SignUpPage = () => {
     };
 
     return (
-        <div className="h-screen flex items-center justify-center bg-white">
+        <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-white gap-6">
             {/* right side */}
             <AuthImagePattern
                 title="Join our community"
@@ -48,7 +48,7 @@ const SignUpPage = () => {
 
 
             {/* left side */}
-            <div className="w-full max-w-sm p-8 bg-white rounded-3xl shadow-md ml-10">
+            <div className="mt-20 p-8 bg-white rounded-3xl shadow-md">
 
                 {/* LOGO */}
                 <div className="text-center mb-8">
@@ -82,7 +82,7 @@ const SignUpPage = () => {
 
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text font-medium text-gray-700 py-2">Email</span>
+                            <span className="label-text font-medium text-gray-700">Email</span>
                         </label>
                         <div className="relative">
                             <input
@@ -97,7 +97,7 @@ const SignUpPage = () => {
 
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text font-medium text-gray-700 py-2">Password</span>
+                            <span className="label-text font-medium text-gray-700">Password</span>
                         </label>
                         <div className="relative">
                             <input
