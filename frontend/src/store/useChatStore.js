@@ -66,5 +66,15 @@ export const useChatStore = create((set, get) => ({
       },
 
       setSelectedUser: (selectedUser) => set({ selectedUser }),
+
+      sendTypingIndicator: (isTyping) => {
+        const { selectedUser } = get();
+        if (!selectedUser) return;
+        const socket = useAuthStore.getState().socket;
+        socket.emit("typing", {
+          receiverId: selectedUser._id,
+          isTyping,
+        });
+      },
   
 }));

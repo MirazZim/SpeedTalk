@@ -37,6 +37,18 @@ io.on("connection", (socket) => {
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
 
+// Listen for typing events
+socket.on("typing", ({ receiverId, isTyping }) => {
+  console.log("Received typing event", { receiverId, isTyping });
+  const receiverSocketId = getReceiverSocketId(receiverId);
+  if (receiverSocketId) {
+    // Emit the typing event to the intended recipient
+    io.to(receiverSocketId).emit("typing", { receiverId, isTyping });
+  }
+});
+
+
+
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);

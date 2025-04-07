@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Camera, Mail, User } from "lucide-react";
+import { ArrowLeft, Camera, Mail, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 
 const ProfilePage = () => {
@@ -24,8 +25,17 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen pt-20">
-      <div className="max-w-2xl mx-auto p-4 py-8">
+
+      
+      <div className="max-w-2xl mx-auto p-4 ">
+        
+        
         <div className="bg-base-300 rounded-xl p-6 space-y-8">
+          {/* Back to Home Button */}
+      <Link to="/" className="flex items-center gap-2 mb-6 text-blue-600 transition duration-150 ease-in-out hover:underline hover:text-blue-700">
+        <ArrowLeft size={20} className="text-blue-600 transition duration-150 ease-in-out hover:text-blue-700" />
+        <span className="text-base font-medium">Back to Home</span>
+      </Link>
           <div className="text-center">
             <h1 className="text-2xl font-semibold ">Profile</h1>
             <p className="mt-2">Your profile information</p>
