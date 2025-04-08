@@ -3,7 +3,6 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { ArrowLeft, Camera, Mail, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
@@ -24,92 +23,75 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen flex justify-center items-center ">
+      <div className="flex max-w-7xl w-full bg-white text-black rounded-2xl shadow-lg overflow-hidden flex-col sm:flex-row">
 
-      
-      <div className="max-w-2xl mx-auto p-4 ">
-        
-        
-        <div className="bg-base-300 rounded-xl p-6 space-y-8">
+        {/* Left Section - Profile Image */}
+        <div className="w-full sm:w-1/3 relative max-h-full sm:h-auto">
+          <img
+            src={selectedImg || authUser.profilePic || "/avatar.png"}
+            alt="Profile"
+            className="w-full h-full object-cover rounded-t-2xl sm:rounded-l-2xl transition-transform duration-300 hover:scale-105"
+          />
+          {/* Profile Picture Change Button */}
+          <label
+            htmlFor="avatar-upload"
+            className="absolute bottom-4 right-4 bg-black bg-opacity-40 text-white p-3 rounded-full cursor-pointer hover:bg-opacity-60 transition-all"
+          >
+            <Camera className="w-6 h-6" />
+            <input
+              type="file"
+              id="avatar-upload"
+              className="hidden"
+              accept="image/*"
+              onChange={handleImageUpload}
+              disabled={isUpdatingProfile}
+            />
+          </label>
+        </div>
+
+        {/* Right Section - User Details */}
+        <div className="w-full sm:w-2/3 p-8 sm:p-12 space-y-6 sm:space-y-8">
           {/* Back to Home Button */}
-      <Link to="/" className="flex items-center gap-2 mb-6 text-blue-600 transition duration-150 ease-in-out hover:underline hover:text-blue-700">
-        <ArrowLeft size={20} className="text-blue-600 transition duration-150 ease-in-out hover:text-blue-700" />
-        <span className="text-base font-medium">Back to Home</span>
-      </Link>
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold ">Profile</h1>
-            <p className="mt-2">Your profile information</p>
+          <Link to="/" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-all">
+            <ArrowLeft size={20} />
+            <span className="font-medium">Back to Home</span>
+          </Link>
+
+          {/* Full Name and Position */}
+          <div className="space-y-2">
+            <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800">{authUser?.fullName || "Miraz"}</h1>
+            {/* <p className="text-lg text-gray-500">Position or Role</p> */}
           </div>
 
-          {/* avatar upload section */}
-
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
-              <img
-                src={selectedImg || authUser.profilePic || "/avatar.png"}
-                alt="Profile"
-                className="size-32 rounded-full object-cover border-4 "
-              />
-              <label
-                htmlFor="avatar-upload"
-                className={`
-                  absolute bottom-0 right-0 
-                  bg-base-content hover:scale-105
-                  p-2 rounded-full cursor-pointer 
-                  transition-all duration-200
-                  ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}
-                `}
-              >
-                <Camera className="w-5 h-5 text-base-200" />
-                <input
-                  type="file"
-                  id="avatar-upload"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  disabled={isUpdatingProfile}
-                />
-              </label>
+          {/* Email Address */}
+          <div className="space-y-2">
+            <div className="text-sm text-gray-500 flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              Email Address
             </div>
-            <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
-            </p>
+            <p className="px-6 py-3 bg-gray-100 rounded-lg border border-gray-200 shadow-sm">{authUser?.email || "example@email.com"}</p>
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Full Name
-              </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.fullName}</p>
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                Email Address
-              </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
-            </div>
-          </div>
-
-          <div className="mt-6 bg-base-300 rounded-xl p-6">
-            <h2 className="text-lg font-medium  mb-4">Account Information</h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between py-2 border-b border-zinc-700">
+          {/* Account Info */}
+          <div className="space-y-2">
+            <h2 className="text-xl sm:text-2xl font-medium text-gray-800">Account Information</h2>
+            <div className="text-sm text-gray-500">
+              <div className="flex justify-between py-3 border-b border-gray-200">
                 <span>Member Since</span>
-                <span>{authUser.createdAt?.split("T")[0]}</span>
+                <span>{authUser.createdAt?.split("T")[0] || "2020-01-01"}</span>
               </div>
-              <div className="flex items-center justify-between py-2">
+              <div className="flex justify-between py-3">
                 <span>Account Status</span>
-                <span className="text-green-500">Active</span>
+                <span className="text-green-500 font-semibold">Active</span>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
   );
 };
+
 export default ProfilePage;
