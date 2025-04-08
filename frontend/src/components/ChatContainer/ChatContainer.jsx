@@ -32,15 +32,13 @@ const ChatContainer = () => {
     if (!selectedUser) return;
     const socket = useAuthStore.getState().socket;
     console.log("Setting up typing listener for user:", selectedUser._id);
-
+    
     const handleTyping = ({ receiverId, isTyping }) => {
-      if (receiverId === selectedUser._id) {
-        // For testing, set the state directly without debounce on receiver side
         setIsUserTyping(isTyping);
-      }
     };
 
-    socket.on("typing", handleTyping);
+    socket.on("typing", handleTyping); 
+    
     return () => {
       socket.off("typing", handleTyping);
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
@@ -65,10 +63,10 @@ const ChatContainer = () => {
 
   // Auto-scroll to the latest message
   useEffect(() => {
-    if (messageEndRef.current && messages) {
+    if (messageEndRef.current && (messages || isUserTyping)) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [messages, isUserTyping]);
 
   if (isMessagesLoading) {
     return (
@@ -91,7 +89,6 @@ const ChatContainer = () => {
           <div
             key={message._id}
             className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
-            ref={index === messages.length - 1 ? messageEndRef : null}
           >
             <div className="chat-image avatar">
               <div className="size-10 rounded-full border">
@@ -122,14 +119,27 @@ const ChatContainer = () => {
             </div>
           </div>
         ))}
+        
+        {/* Modern Typing indicator inside messages container as a chat message */}
+        {isUserTyping && (
+          <div className="chat chat-start animate-fade-in">
+            <div className="chat-image avatar">
+              <div className="size-10 rounded-full border">
+                <img
+                  src={selectedUser?.profilePic || "/avatar.png"}
+                  alt="profile picture of user"
+                />
+              </div>
+            </div>
+            <div className="chat-bubble bg-base-300 min-h-10 min-w-12 flex items-center justify-center">
+              <TypingIndicator />
+            </div>
+          </div>
+        )}
+        
+        {/* Reference for auto-scroll */}
+        <div ref={messageEndRef}></div>
       </div>
-
-      {/* Typing Indicator placed outside the scrollable container */}
-      {isUserTyping && (
-        <div style={{ padding: "10px", background: "red", color: "white", textAlign: "center" }}>
-          Typing...
-        </div>
-      )}
 
       <MessageInput />
     </div>
