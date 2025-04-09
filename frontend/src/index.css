@@ -16,3 +16,32 @@
   .animate-fade-in {
     animation: fadeIn 0.3s ease-in-out forwards;
   }
+
+  /* Style for the reaction button */
+.react-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Emoji picker styles */
+.emoji-picker {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.emoji-picker button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Reactions displayed above the message */
+.message-reactions {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+}
