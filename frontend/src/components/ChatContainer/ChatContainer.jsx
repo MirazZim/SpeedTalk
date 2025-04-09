@@ -102,6 +102,7 @@ const ChatContainer = () => {
       socket.off("new-reaction", handleNewReaction);
     };
   }, [socket]);
+
   // Group reactions by emoji type
   const getReactionCounts = (reactions) => {
     if (!reactions || reactions.length === 0) return {};
@@ -147,7 +148,7 @@ const ChatContainer = () => {
         {messages.map((message) => (
           <div 
             key={message._id} 
-            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"} relative mb-8`}
           >
             <div className="chat-image avatar">
               <div className="size-10 rounded-full border">
@@ -172,12 +173,12 @@ const ChatContainer = () => {
               {message.senderId !== authUser._id && (
                 <button 
                   onClick={() => toggleReactionOptions(message._id)}
-                  className="absolute -bottom-6 right-2 size-6 rounded-full bg-base-300 flex items-center justify-center hover:bg-base-200 transition-colors"
+                  className="absolute -bottom-4 right-2 size-6 rounded-full bg-base-300 flex items-center justify-center hover:bg-base-200 transition-colors"
                 >
                   {message.reactions && message.reactions.length > 0 ? (
                     <span className="text-sm">{getPrimaryReaction(message.reactions)}</span>
                   ) : (
-                    <span className="text-sm">😊</span>
+                    <span className="text-sm">🫥</span>
                   )}
                 </button>
               )}
@@ -185,7 +186,7 @@ const ChatContainer = () => {
             
             {/* Display reaction options when emoji button is clicked */}
             {showReactionOptions === message._id && (
-              <div className="mt-2 flex justify-center">
+              <div className={`absolute ${message.senderId === authUser._id ? "right-0" : "left-12"} -bottom-16 z-10`}>
                 <div className="bg-base-200 rounded-full px-2 py-1 shadow-md flex">
                   {commonReactions.map((emoji) => (
                     <button 
@@ -200,17 +201,6 @@ const ChatContainer = () => {
               </div>
             )}
             
-            {/* Display existing reactions underneath the message */}
-            {message.reactions && message.reactions.length > 0 && (
-              <div className="flex mt-1 justify-start ml-2">
-                {Object.entries(getReactionCounts(message.reactions)).map(([emoji, count], idx) => (
-                  <div key={idx} className="bg-base-200 rounded-full px-1 mr-1 flex items-center">
-                    <span className="text-sm">{emoji}</span>
-                    {count > 1 && <span className="text-xs ml-1">{count}</span>}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         ))}
 
