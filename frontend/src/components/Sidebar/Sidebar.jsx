@@ -65,34 +65,46 @@ const Sidebar = () => {
       </button>
 
       <aside
-        className={`fixed lg:static z-40 inset-0 lg:inset-auto h-full w-72 bg-base-100 border-r border-base-300 flex flex-col transition-transform duration-300 transform mt-16
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
+        className={`fixed lg:static z-40 inset-0 lg:inset-auto lg:h-[calc(100vh-4rem)] h-full w-72 bg-base-100 border-r border-base-300 flex flex-col transition-transform duration-300 transform
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
       >
         <div className="border-b border-base-300 px-4 py-3">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <img
-                src={authUser?.profilePic || '/avatar.png'}
-                alt="My profile"
-                className="w-12 h-12 object-cover rounded-full"
-              />
-              <div className="flex flex-col overflow-hidden">
-                <span className="font-semibold truncate text-base">
-                  {authUser?.fullName}
-                </span>
-                <span className="text-sm truncate">
-                  {authUser?.email}
-                </span>
-              </div>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="lg:hidden text-xl transition-colors"
-            >
-              ✕
-            </button>
-          </div>
+  <div className="flex items-start justify-between">
+    <div className="flex items-center gap-3">
+      <img
+        src={authUser?.profilePic || '/avatar.png'}
+        alt="My profile"
+        className="w-12 h-12 object-cover rounded-full"
+      />
+      <div className="flex flex-col overflow-hidden">
+        <span className="font-semibold truncate text-base">
+          {authUser?.fullName}
+        </span>
+        <span className="text-sm truncate">{authUser?.email}</span>
+
+        {/* Online/Offline with dot */}
+        <div className="flex items-center gap-1 text-xs mt-0.5">
+          <span
+            className={`w-2 h-2 rounded-full ${
+              onlineUsers.includes(authUser._id)
+                ? 'bg-green-500'
+                : 'bg-gray-400'
+            }`}
+          ></span>
+          <span>
+            {onlineUsers.includes(authUser._id) ? 'Online' : 'Offline'}
+          </span>
         </div>
+      </div>
+    </div>
+    <button
+      onClick={() => setIsOpen(false)}
+      className="lg:hidden text-xl transition-colors"
+    >
+      ✕
+    </button>
+  </div>
+</div>
 
         <div className="px-4 py-3 flex items-center gap-2 border-b border-base-200">
           <input

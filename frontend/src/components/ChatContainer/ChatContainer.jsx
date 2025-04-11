@@ -158,7 +158,7 @@ const ChatContainer = () => {
             </div>
 
             <div className="relative max-w-[85%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%]">
-              <div className="chat-bubble flex flex-col relative  p-3 sm:p-4 rounded-2xl rounded-br-none shadow-md">
+              <div className="chat-bubble flex flex-col relative  p-3 sm:p-4 rounded-2xl shadow-md">
                 {message.image && (
                   <img
                     src={message.image}
@@ -167,7 +167,7 @@ const ChatContainer = () => {
                   />
                 )}
                 {message.text && (
-                  <p className="whitespace-pre-line text-sm sm:text-base leading-relaxed">
+                  <p className="whitespace-pre-line text-sm sm:text-base leading-relaxed break-words overflow-hidden">
                     {message.text}
                   </p>
                 )}
