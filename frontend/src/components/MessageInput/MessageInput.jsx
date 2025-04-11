@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import { useChatStore } from '../../store/useChatStore';
-import { Image, Send, X } from "lucide-react";
-import toast from "react-hot-toast";
+import { Image, Send, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const MessageInput = () => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -12,8 +12,8 @@ const MessageInput = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file?.type.startsWith("image/")) {
-      toast.error("Please select a valid image file");
+    if (!file?.type.startsWith('image/')) {
+      toast.error('Please select a valid image file');
       return;
     }
     const reader = new FileReader();
@@ -23,7 +23,7 @@ const MessageInput = () => {
 
   const removeImage = () => {
     setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleTyping = (e) => {
@@ -44,11 +44,11 @@ const MessageInput = () => {
         image: imagePreview,
       });
       sendTypingIndicator(false);
-      setText("");
+      setText('');
       setImagePreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
-      console.error("Failed to send message:", error);
+      console.error('Failed to send message:', error);
     }
   };
 
@@ -86,11 +86,14 @@ const MessageInput = () => {
             onChange={handleImageChange}
           />
 
-          {/* Image Upload Button (always visible) */}
+          {/* Image Upload Button */}
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className={`btn btn-circle btn-sm ${imagePreview ? "text-primary" : "text-base-content/40"}`}
+            className={`btn btn-sm btn-circle transition-all duration-300 ${imagePreview
+                ? 'bg-primary/10 text-primary hover:bg-primary/20'
+                : 'bg-base-200 text-base-content/40 hover:text-base-content'
+              }`}
             aria-label="Upload Image"
           >
             <Image size={18} />
@@ -109,11 +112,14 @@ const MessageInput = () => {
         {/* Send Button */}
         <button
           type="submit"
-          className="btn btn-sm btn-circle"
           disabled={!text.trim() && !imagePreview}
           aria-label="Send Message"
+          className={`btn btn-sm btn-circle transition-all duration-300 ${text.trim() || imagePreview
+              ? 'bg-primary text-white hover:scale-105 shadow-md'
+              : 'bg-base-200 text-base-content/40 cursor-not-allowed'
+            }`}
         >
-          <Send size={20} />
+          <Send size={18} className="transition-transform duration-200" />
         </button>
       </form>
     </div>

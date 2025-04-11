@@ -119,6 +119,12 @@ const ChatContainer = () => {
     return userReaction ? userReaction.emoji : null;
   };
 
+  const formatText = (text) => {
+    const maxLength = 25;
+    if (!text) return '';
+    return text.replace(/(\S{25})(?=\S)/g, '$1\u200B');
+  };
+
   if (isMessagesLoading) {
     return (
       <div className="flex-1 flex flex-col">
@@ -136,7 +142,7 @@ const ChatContainer = () => {
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"} relative mb-10 group`}
+            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"} items-end gap-2 relative mb-10 group`}
           >
             <div className="chat-image avatar">
               <div className="size-10 md:size-12 rounded-full border">
@@ -157,8 +163,8 @@ const ChatContainer = () => {
               </time>
             </div>
 
-            <div className="relative max-w-[85%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%]">
-              <div className="chat-bubble flex flex-col relative  p-3 sm:p-4 rounded-2xl shadow-md">
+            <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] flex flex-col">
+              <div className="chat-bubble flex flex-col relative p-3 sm:p-4 rounded-2xl shadow-md">
                 {message.image && (
                   <img
                     src={message.image}
@@ -167,8 +173,8 @@ const ChatContainer = () => {
                   />
                 )}
                 {message.text && (
-                  <p className="whitespace-pre-line text-sm sm:text-base leading-relaxed break-words overflow-hidden">
-                    {message.text}
+                  <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line overflow-wrap-anywhere">
+                    {formatText(message.text)}
                   </p>
                 )}
               </div>
