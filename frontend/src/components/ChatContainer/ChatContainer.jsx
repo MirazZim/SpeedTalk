@@ -33,7 +33,7 @@ const ChatContainer = () => {
   const handleReact = (messageId, message, emoji) => {
     const reaction = { emoji, userId: authUser._id };
     const hasReacted = hasUserReacted(message.reactions, emoji);
-    
+
     if (hasReacted) {
       useChatStore.getState().removeReaction(messageId, reaction);
     } else {
@@ -76,7 +76,7 @@ const ChatContainer = () => {
         ),
       }));
     };
-    
+
     const handleRemoveReaction = (updatedMessage) => {
       useChatStore.setState((state) => ({
         messages: state.messages.map((msg) =>
@@ -84,10 +84,10 @@ const ChatContainer = () => {
         ),
       }));
     };
-    
+
     socket.on("new-reaction", handleNewReaction);
     socket.on("reaction-removed", handleRemoveReaction);
-    
+
     return () => {
       socket.off("new-reaction", handleNewReaction);
       socket.off("reaction-removed", handleRemoveReaction);
@@ -160,12 +160,20 @@ const ChatContainer = () => {
             </div>
 
             {/* Message Bubble */}
-            <div className="relative">
-              <div className="chat-bubble flex flex-col relative">
+            <div className="relative max-w-[80%] sm:max-w-[70%] ">
+              <div className="chat-bubble flex flex-col relative  p-3 rounded-2xl rounded-br-none shadow-md">
                 {message.image && (
-                  <img src={message.image} alt="Attachment" className="sm:max-w-[200px] rounded-md mb-2" />
+                  <img
+                    src={message.image}
+                    alt="Attachment"
+                    className="sm:max-w-[200px] rounded-md mb-2"
+                  />
                 )}
-                {message.text && <p>{message.text}</p>}
+                {message.text && (
+                  <p className="whitespace-pre-line text-sm leading-relaxed">
+                    {message.text}
+                  </p>
+                )}
               </div>
 
               {/* Reaction Button */}
@@ -187,17 +195,17 @@ const ChatContainer = () => {
                   )}
                 </button>
               )}
-              
+
               {/* Reactions displayed at the bottom of the chat bubble */}
               {message.reactions && message.reactions.length > 0 && (
-                <div className={`absolute flex gap-1 -bottom-4 left-2 ${message.senderId === authUser._id ? "right-2" : "left-2"}`}>
+                <div className={`absolute flex gap-1 -bottom-4 left-1 ${message.senderId === authUser._id ? "right-6" : "left-6"}`}>
                   {getAllUniqueReactions(message.reactions).map((emoji, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleReact(message._id, message, emoji)}
                       className={`inline-flex items-center justify-center rounded-full text-sm 
-                        ${hasUserReacted(message.reactions, emoji) 
-                          ? "bg-blue-100 text-blue-600" 
+                        ${hasUserReacted(message.reactions, emoji)
+                          ? "bg-blue-100 text-blue-600"
                           : "bg-gray-100 text-gray-600"
                         } p-1 hover:bg-gray-200 transition-colors`}
                       title={`${hasUserReacted(message.reactions, emoji) ? "Remove" : "Add"} ${emoji} reaction`}
@@ -208,7 +216,7 @@ const ChatContainer = () => {
                 </div>
               )}
             </div>
-            
+
             {/* Reaction Picker */}
             {showReactionOptions === message._id && (
               <div
