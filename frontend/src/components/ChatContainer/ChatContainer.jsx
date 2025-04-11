@@ -24,7 +24,7 @@ const ChatContainer = () => {
   const [showReactionOptions, setShowReactionOptions] = useState(null);
   const typingTimeoutRef = useRef(null);
 
-  const commonReactions = ['❤️', '😂', '😮', '😢', '😠', '👍'];
+  const commonReactions = ['❤️', '😂', '😮', '😭', '😠', '👍'];
 
   const toggleReactionOptions = (messageId) => {
     setShowReactionOptions(showReactionOptions === messageId ? null : messageId);
@@ -121,7 +121,7 @@ const ChatContainer = () => {
 
   if (isMessagesLoading) {
     return (
-      <div className="flex-1 flex flex-col ">
+      <div className="flex-1 flex flex-col">
         <ChatHeader />
         <MessageSkeleton />
         <MessageInput />
@@ -130,17 +130,16 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col ">
+    <div className="flex-1 flex flex-col w-full max-w-7xl mx-auto">
       <ChatHeader />
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"} relative mb-8 group`}
+            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"} relative mb-10 group`}
           >
-            {/* Avatar */}
             <div className="chat-image avatar">
-              <div className="size-10 rounded-full border">
+              <div className="size-10 md:size-12 rounded-full border">
                 <img
                   src={
                     message.senderId === authUser._id
@@ -152,16 +151,14 @@ const ChatContainer = () => {
               </div>
             </div>
 
-            {/* Message Header (Timestamp) */}
             <div className="chat-header mb-1">
               <time className="text-xs opacity-50 ml-1">
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
 
-            {/* Message Bubble */}
-            <div className="relative max-w-[80%] sm:max-w-[70%] ">
-              <div className="chat-bubble flex flex-col relative  p-3 rounded-2xl rounded-br-none shadow-md">
+            <div className="relative max-w-[85%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%]">
+              <div className="chat-bubble flex flex-col relative  p-3 sm:p-4 rounded-2xl rounded-br-none shadow-md">
                 {message.image && (
                   <img
                     src={message.image}
@@ -170,13 +167,12 @@ const ChatContainer = () => {
                   />
                 )}
                 {message.text && (
-                  <p className="whitespace-pre-line text-sm leading-relaxed">
+                  <p className="whitespace-pre-line text-sm sm:text-base leading-relaxed">
                     {message.text}
                   </p>
                 )}
               </div>
 
-              {/* Reaction Button */}
               {message.senderId !== authUser._id && (
                 <button
                   onClick={() => toggleReactionOptions(message._id)}
@@ -196,9 +192,8 @@ const ChatContainer = () => {
                 </button>
               )}
 
-              {/* Reactions displayed at the bottom of the chat bubble */}
               {message.reactions && message.reactions.length > 0 && (
-                <div className={`absolute flex gap-1 -bottom-4 left-1 ${message.senderId === authUser._id ? "right-6" : "left-6"}`}>
+                <div className={`absolute flex gap-1 flex-wrap -bottom-5 left-1 max-w-[85%] ${message.senderId === authUser._id ? "right-6" : "left-6"}`}>
                   {getAllUniqueReactions(message.reactions).map((emoji, idx) => (
                     <button
                       key={idx}
@@ -217,7 +212,6 @@ const ChatContainer = () => {
               )}
             </div>
 
-            {/* Reaction Picker */}
             {showReactionOptions === message._id && (
               <div
                 className={`absolute top-0 ${message.senderId === authUser._id ? "right-0" : "left-0"} -mt-12 z-10 flex ${message.senderId === authUser._id ? "justify-end" : "justify-start"}`}
