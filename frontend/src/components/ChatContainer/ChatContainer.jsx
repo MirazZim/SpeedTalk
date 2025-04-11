@@ -163,7 +163,7 @@ const ChatContainer = () => {
               </time>
             </div>
 
-            <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] flex flex-col">
+            <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] flex flex-col relative">
               <div className="chat-bubble flex flex-col relative p-3 sm:p-4 rounded-2xl shadow-md">
                 {message.image && (
                   <img
@@ -177,45 +177,46 @@ const ChatContainer = () => {
                     {formatText(message.text)}
                   </p>
                 )}
+
+                {/* Emoji Reactions Display (Bottom-Right) */}
+                {message.reactions && message.reactions.length > 0 && (
+                  <div className="absolute -bottom-4 right-2 flex gap-1 z-10">
+                    {getAllUniqueReactions(message.reactions).map((emoji, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleReact(message._id, message, emoji)}
+                        className={`inline-flex items-center justify-center rounded-full text-sm 
+              ${hasUserReacted(message.reactions, emoji)
+                            ? "bg-blue-100 text-blue-600"
+                            : "bg-gray-100 text-gray-600"
+                          } p-1 hover:bg-gray-200 transition-colors`}
+                        title={`${hasUserReacted(message.reactions, emoji) ? "Remove" : "Add"} ${emoji} reaction`}
+                      >
+                        <span className="text-xs">{emoji}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Emoji Picker (Top-Right) */}
+                {message.senderId !== authUser._id && (
+                  <button
+                    onClick={() => toggleReactionOptions(message._id)}
+                    className={`group-hover:opacity-100 opacity-0 absolute w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 active:bg-gray-400 transition-all duration-150 shadow-sm z-10 -top-3 right-1`}
+                    aria-label="Add a reaction"
+                  >
+                    {getUserReaction(message.reactions) ? (
+                      <span className="text-lg leading-none animate-bounce">
+                        {getUserReaction(message.reactions)}
+                      </span>
+                    ) : (
+                      <span className="text-lg leading-none">😊</span>
+                    )}
+                  </button>
+                )}
               </div>
 
-              {message.senderId !== authUser._id && (
-                <button
-                  onClick={() => toggleReactionOptions(message._id)}
-                  className={`group-hover:opacity-100 opacity-0 absolute w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 active:bg-gray-400 transition-all duration-150 shadow-sm z-10 ${getUserReaction(message.reactions)
-                    ? "top-0 right-0 -mt-3 -mr-3"
-                    : "-bottom-4 right-2"
-                    }`}
-                  aria-label="Add a reaction"
-                >
-                  {getUserReaction(message.reactions) ? (
-                    <span className="text-lg leading-none animate-bounce">
-                      {getUserReaction(message.reactions)}
-                    </span>
-                  ) : (
-                    <span className="text-lg leading-none">😊</span>
-                  )}
-                </button>
-              )}
 
-              {message.reactions && message.reactions.length > 0 && (
-                <div className={`absolute flex gap-1 flex-wrap -bottom-5 left-1 max-w-[85%] ${message.senderId === authUser._id ? "right-6" : "left-6"}`}>
-                  {getAllUniqueReactions(message.reactions).map((emoji, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleReact(message._id, message, emoji)}
-                      className={`inline-flex items-center justify-center rounded-full text-sm 
-                        ${hasUserReacted(message.reactions, emoji)
-                          ? "bg-blue-100 text-blue-600"
-                          : "bg-gray-100 text-gray-600"
-                        } p-1 hover:bg-gray-200 transition-colors`}
-                      title={`${hasUserReacted(message.reactions, emoji) ? "Remove" : "Add"} ${emoji} reaction`}
-                    >
-                      <span className="text-xs">{emoji}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
             {showReactionOptions === message._id && (
