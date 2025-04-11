@@ -76,7 +76,8 @@ export const useChatStore = create((set, get) => ({
           isTyping,
         });
       },
-
+  
+      //send reaction to server
       sendReaction: (messageId, reaction) => {
         const { selectedUser } = get();
         if (!selectedUser) return;
@@ -86,5 +87,16 @@ export const useChatStore = create((set, get) => ({
           reaction,
         });
       },
+    
+      // remove reaction from server
+      removeReaction: (messageId, reaction) => {
+  const { selectedUser } = get();
+  if (!selectedUser) return;
+  const socket = useAuthStore.getState().socket;
+  socket.emit("remove-reaction", {
+    messageId,
+    reaction,
+  });
+},
   
 }));
