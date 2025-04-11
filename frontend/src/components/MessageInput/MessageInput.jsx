@@ -10,59 +10,40 @@ const MessageInput = () => {
   const typingTimeoutRef = useRef(null);
   const { sendMessage, sendTypingIndicator } = useChatStore();
 
-  // Handle image change
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
+    if (!file?.type.startsWith("image/")) {
+      toast.error("Please select a valid image file");
       return;
     }
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+    reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
   };
 
-  // Handle image remove
   const removeImage = () => {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // Handle typing – emit "true" immediately and send "false" after 5 seconds of inactivity
   const handleTyping = (e) => {
     const value = e.target.value;
     setText(value);
-    
-    if (value.trim().length > 0) {
-      console.log("Sender: Sending true");
-      sendTypingIndicator(true);
-    } else {
-      console.log("Sender: Sending false");
-      sendTypingIndicator(false);
-    }
-
-    // Clear previous timeout and set a new one for 5000ms
+    sendTypingIndicator(value.trim().length > 0);
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-    typingTimeoutRef.current = setTimeout(() => {
-      console.log("Sender: Debounce timeout - sending false");
-      sendTypingIndicator(false);
-    }, 5000);
+    typingTimeoutRef.current = setTimeout(() => sendTypingIndicator(false), 5000);
   };
 
-  // Handle send message
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
+
     try {
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
       });
-      // Clear form and stop typing indicator
       sendTypingIndicator(false);
-      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -72,7 +53,7 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 w-full bg-base-100">
       {/* Image Preview */}
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
@@ -80,11 +61,11 @@ const MessageInput = () => {
             <img
               src={imagePreview}
               alt="Preview"
-              className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
+              className="w-20 h-20 object-cover rounded-lg border border-base-300"
             />
             <button
               onClick={removeImage}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300 flex items-center justify-center"
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-200 flex items-center justify-center"
               type="button"
             >
               <X className="size-3" />
@@ -95,15 +76,8 @@ const MessageInput = () => {
 
       {/* Message Input Form */}
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-        <div className="flex-1 flex gap-2">
-          <input
-            type="text"
-            className="w-full input input-bordered rounded-lg input-sm sm:input-md"
-            placeholder="Type a message..."
-            value={text}
-            onChange={handleTyping}
-          />
-          {/* Hidden file input for image upload */}
+        <div className="flex items-center gap-2 w-full">
+          {/* Hidden File Input */}
           <input
             type="file"
             accept="image/*"
@@ -111,20 +85,35 @@ const MessageInput = () => {
             ref={fileInputRef}
             onChange={handleImageChange}
           />
+
+          {/* Image Upload Button (always visible) */}
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}
+            className={`btn btn-circle btn-sm ${imagePreview ? "text-primary" : "text-base-content/40"}`}
+            aria-label="Upload Image"
           >
-            <Image size={20} />
+            <Image size={18} />
           </button>
+
+          {/* Text Input */}
+          <input
+            type="text"
+            className="input input-bordered input-sm sm:input-md w-full rounded-lg"
+            placeholder="Type a message..."
+            value={text}
+            onChange={handleTyping}
+          />
         </div>
+
+        {/* Send Button */}
         <button
           type="submit"
           className="btn btn-sm btn-circle"
           disabled={!text.trim() && !imagePreview}
+          aria-label="Send Message"
         >
-          <Send size={22} />
+          <Send size={20} />
         </button>
       </form>
     </div>
