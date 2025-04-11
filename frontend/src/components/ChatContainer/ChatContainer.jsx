@@ -180,19 +180,19 @@ const ChatContainer = () => {
 
                 {/* Emoji Reactions Display (Bottom-Right) */}
                 {message.reactions && message.reactions.length > 0 && (
-                  <div className="absolute -bottom-4 right-2 flex gap-1 z-10">
+                  <div className="absolute -bottom-4 -right-1 flex gap-1 z-10">
                     {getAllUniqueReactions(message.reactions).map((emoji, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleReact(message._id, message, emoji)}
                         className={`inline-flex items-center justify-center rounded-full text-sm 
               ${hasUserReacted(message.reactions, emoji)
-                            ? "bg-blue-100 text-blue-600"
-                            : "bg-gray-100 text-gray-600"
-                          } p-1 hover:bg-gray-200 transition-colors`}
+                            ? " text-blue-600"
+                            : " text-gray-600"
+                          } p-1 hover:bg-zinc-300 transition-colors`}
                         title={`${hasUserReacted(message.reactions, emoji) ? "Remove" : "Add"} ${emoji} reaction`}
                       >
-                        <span className="text-xs">{emoji}</span>
+                        <span className="text-sm">{emoji}</span>
                       </button>
                     ))}
                   </div>
@@ -202,7 +202,7 @@ const ChatContainer = () => {
                 {message.senderId !== authUser._id && (
                   <button
                     onClick={() => toggleReactionOptions(message._id)}
-                    className={`group-hover:opacity-100 opacity-0 absolute w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 active:bg-gray-400 transition-all duration-150 shadow-sm z-10 -top-3 right-1`}
+                    className={`group-hover:opacity-100 opacity-0 absolute w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 active:bg-gray-400 transition-all duration-150 shadow-sm z-10 -top-3 -right-2`}
                     aria-label="Add a reaction"
                   >
                     {getUserReaction(message.reactions) ? (

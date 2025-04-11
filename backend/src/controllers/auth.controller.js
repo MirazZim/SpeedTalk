@@ -112,7 +112,7 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("Error in updateProfile: ", error);
+    // console.log("Error in updateProfile: ", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -122,7 +122,7 @@ export const checkAuth = async (req, res) => {
     const updatedUser = await User.findById(req.user._id).select("-password");
     res.status(200).json(updatedUser);  // Return full user data
   } catch (error) {
-    console.log("Error in checkAuth controller:", error.message);
+    // console.log("Error in checkAuth controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

@@ -27,7 +27,7 @@ const userSocketMap = {}; // {userId: socketId}
   
 
 io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+ // console.log("a user connected", socket.id);
 
   // get the userId from the query parameter
   const userId = socket.handshake.query.userId;
@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
 
 // Listen for typing events
 socket.on("typing", ({ receiverId, isTyping }) => {
-  console.log("Received typing event", { receiverId, isTyping });
+  //console.log("Received typing event", { receiverId, isTyping });
   const receiverSocketId = getReceiverSocketId(receiverId);
   if (receiverSocketId) {
     // Emit the typing event to the intended recipient
@@ -56,12 +56,12 @@ socket.on("typing", ({ receiverId, isTyping }) => {
 
 socket.on("send-reaction", async ({ messageId, reaction }) => {
   try {
-    console.log("Received reaction:", { messageId, reaction });
+   // console.log("Received reaction:", { messageId, reaction });
 
     // Find the message by its ID
     const message = await Message.findById(messageId);
     if (!message) {
-      console.log("Message not found");
+     // console.log("Message not found");
       return;
     }
 
@@ -71,11 +71,11 @@ socket.on("send-reaction", async ({ messageId, reaction }) => {
     );
 
     if (existingReactionIndex !== -1) {
-      console.log("Updating existing reaction...");
+     // console.log("Updating existing reaction...");
       // Update the existing reaction with the new emoji
       message.reactions[existingReactionIndex].emoji = reaction.emoji;
     } else {
-      console.log("Adding new reaction...");
+      //console.log("Adding new reaction...");
       // Add new reaction
       message.reactions.push(reaction);
     }
@@ -84,7 +84,7 @@ socket.on("send-reaction", async ({ messageId, reaction }) => {
     await message.save();
 
     // Emit the updated message with reactions to all clients
-    console.log("Emitting new-reaction with updated message:", message);
+    //console.log("Emitting new-reaction with updated message:", message);
     io.emit("new-reaction", { _id: message._id, reactions: message.reactions });
 
   } catch (error) {
@@ -93,11 +93,8 @@ socket.on("send-reaction", async ({ messageId, reaction }) => {
 });
 
 
-
-
-
   socket.on("disconnect", () => {
-    console.log("A user disconnected", socket.id);
+    //console.log("A user disconnected", socket.id);
     // remove the userId from the userSocketMap
     delete userSocketMap[userId];
     // emit the event "getOnlineUsers" to all the connected clients
