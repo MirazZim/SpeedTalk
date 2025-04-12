@@ -4,99 +4,99 @@ import { axiosInstance } from "../lib/axios.js";
 import { useAuthStore } from "./useAuthStore.js";
 
 export const useChatStore = create((set, get) => ({
-    messages: [],
-    users: [],
-    selectedUser: null,
-    isUsersLoading: false,
-    isMessagesLoading: false,
+  messages: [],
+  users: [],
+  selectedUser: null,
+  isUsersLoading: false,
+  isMessagesLoading: false,
 
-    getUsers: async () => {
-        set({ isUsersLoading: true });
-        try {
-          const res = await axiosInstance.get("/messages/users");
-          set({ users: res.data });
-        } catch (error) {
-          toast.error(error.response.data.message);
-        } finally {
-          set({ isUsersLoading: false });
-        }
-      },
+  getUsers: async () => {
+    set({ isUsersLoading: true });
+    try {
+      const res = await axiosInstance.get("/messages/users");
+      set({ users: res.data });
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isUsersLoading: false });
+    }
+  },
 
-      getMessages: async (userId) => {
-        set({ isMessagesLoading: true });
-        try {
-          const res = await axiosInstance.get(`/messages/${userId}`);
-          set({ messages: res.data });
-        } catch (error) {
-          toast.error(error.response.data.message);
-        } finally {
-          set({ isMessagesLoading: false });
-        }
-      },
+  getMessages: async (userId) => {
+    set({ isMessagesLoading: true });
+    try {
+      const res = await axiosInstance.get(`/messages/${userId}`);
+      set({ messages: res.data });
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isMessagesLoading: false });
+    }
+  },
 
-      sendMessage: async (messageData) => {
-        const { selectedUser, messages } = get();
-        try {
-          const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
-          set({ messages: [...messages, res.data] });
-        } catch (error) {
-          toast.error(error.response.data.message);
-        }
-      },
+  sendMessage: async (messageData) => {
+    const { selectedUser, messages } = get();
+    try {
+      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+      set({ messages: [...messages, res.data] });
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  },
 
-      subscribeToMessages: () => {
-        const { selectedUser } = get();
-        if (!selectedUser) return;
-    
-        const socket = useAuthStore.getState().socket;
-    
-        socket.on("newMessage", (newMessage) => {
-          const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
-          if (!isMessageSentFromSelectedUser) return;
-    
-          set({
-            messages: [...get().messages, newMessage],
-          });
-        });
-      },
-    
-      unsubscribeFromMessages: () => {
-        const socket = useAuthStore.getState().socket;
-        socket.off("newMessage");
-      },
+  subscribeToMessages: () => {
+    const { selectedUser } = get();
+    if (!selectedUser) return;
 
-      setSelectedUser: (selectedUser) => set({ selectedUser }),
+    const socket = useAuthStore.getState().socket;
 
-      sendTypingIndicator: (isTyping) => {
-        const { selectedUser } = get();
-        if (!selectedUser) return;
-        const socket = useAuthStore.getState().socket;
-        socket.emit("typing", {
-          receiverId: selectedUser._id,
-          isTyping,
-        });
-      },
-  
-      //send reaction to server
-      sendReaction: (messageId, reaction) => {
-        const { selectedUser } = get();
-        if (!selectedUser) return;
-        const socket = useAuthStore.getState().socket;
-        socket.emit("send-reaction", {
-          messageId,
-          reaction,
-        });
-      },
-    
-      // remove reaction from server
-      removeReaction: (messageId, reaction) => {
-  const { selectedUser } = get();
-  if (!selectedUser) return;
-  const socket = useAuthStore.getState().socket;
-  socket.emit("remove-reaction", {
-    messageId,
-    reaction,
-  });
-},
-  
+    socket.on("newMessage", (newMessage) => {
+      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
+      if (!isMessageSentFromSelectedUser) return;
+
+      set({
+        messages: [...get().messages, newMessage],
+      });
+    });
+  },
+
+  unsubscribeFromMessages: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.off("newMessage");
+  },
+
+  setSelectedUser: (selectedUser) => set({ selectedUser }),
+
+  sendTypingIndicator: (isTyping) => {
+    const { selectedUser } = get();
+    if (!selectedUser) return;
+    const socket = useAuthStore.getState().socket;
+    socket.emit("typing", {
+      receiverId: selectedUser._id,
+      isTyping,
+    });
+  },
+
+  //send reaction to server
+  sendReaction: (messageId, reaction) => {
+    const { selectedUser } = get();
+    if (!selectedUser) return;
+    const socket = useAuthStore.getState().socket;
+    socket.emit("send-reaction", {
+      messageId,
+      reaction,
+    });
+  },
+
+  // remove reaction from server
+  removeReaction: (messageId, reaction) => {
+    const { selectedUser } = get();
+    if (!selectedUser) return;
+    const socket = useAuthStore.getState().socket;
+    socket.emit("remove-reaction", {
+      messageId,
+      reaction,
+    });
+  },
+
 }));

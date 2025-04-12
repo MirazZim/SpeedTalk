@@ -3,12 +3,13 @@ import { useChatStore } from '../../store/useChatStore';
 import SidebarSkeleton from '../SidebarSkeleton/SidebarSkeleton';
 import { Users } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
+import { useUiStore } from '../../store/useUiStore';
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
   const { onlineUsers, authUser } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const { isSidebarOpen, setSidebarOpen, toggleSidebar } = useUiStore();
 
   useEffect(() => {
     getUsers();
@@ -18,11 +19,9 @@ const Sidebar = () => {
     ? users.filter((user) => onlineUsers.includes(user._id))
     : users;
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
-
   const closeSidebar = () => {
     if (window.innerWidth < 1024) {
-      setIsOpen(false);
+      setSidebarOpen(false);
     }
   };
 
@@ -38,8 +37,8 @@ const Sidebar = () => {
       };
 
       const onTouchEnd = () => {
-        if (startX < 80 && endX - startX > 60) setIsOpen(true);
-        if (startX > 200 && startX - endX > 60) setIsOpen(false);
+        if (startX < 80 && endX - startX > 60) setSidebarOpen(true);
+        if (startX > 200 && startX - endX > 60) setSidebarOpen(false);
         document.removeEventListener('touchmove', onTouchMove);
         document.removeEventListener('touchend', onTouchEnd);
       };
@@ -50,14 +49,14 @@ const Sidebar = () => {
 
     document.addEventListener('touchstart', handleSwipe);
     return () => document.removeEventListener('touchstart', handleSwipe);
-  }, []);
+  }, [setSidebarOpen]);
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
     <>
       {/* Overlay for mobile */}
-      {isOpen && (
+      {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/30 z-30 lg:hidden"
           onClick={closeSidebar}
@@ -65,7 +64,7 @@ const Sidebar = () => {
       )}
 
       {/* Toggle Button */}
-      {!isOpen && (
+      {!isSidebarOpen && (
         <button
           className="lg:hidden fixed top-4 left-4 z-50 bg-base-100 p-2 rounded-md shadow-md"
           onClick={toggleSidebar}
@@ -76,11 +75,11 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <aside
-  className={`fixed lg:static z-40 inset-y-0 left-0
-  lg:h-[calc(100vh-4rem)] h-full w-72 bg-base-100 border-r border-base-300 flex flex-col 
-  transition-transform duration-300 transform
-  ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
->
+        className={`fixed lg:static z-40 inset-y-0 left-0
+        lg:h-[calc(100vh-4rem)] h-full w-72 bg-base-100 border-r border-base-300 flex flex-col 
+        transition-transform duration-300 transform
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
+      >
         {/* Profile Header */}
         <div className="border-b border-base-300 px-4 py-3">
           <div className="flex items-start justify-between">
@@ -137,11 +136,9 @@ const Sidebar = () => {
                 setSelectedUser(user);
                 closeSidebar();
               }}
-              className={`
-                w-full px-4 py-3 flex items-center gap-3
+              className={`w-full px-4 py-3 flex items-center gap-3
                 hover:bg-base-200 transition-colors
-                ${selectedUser?._id === user._id ? 'bg-base-300' : ''}
-              `}
+                ${selectedUser?._id === user._id ? 'bg-base-300' : ''}`}
             >
               <div className="relative">
                 <img
