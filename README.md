@@ -162,7 +162,7 @@ See the [LICENSE](./LICENSE) file for more details.
 ## 📩 Connect with Me
 
 - GitHub: [@MirazZim](https://github.com/MirazZim)
-- LinkedIn: [mirazzim](https://www.linkedin.com/in/mirazur-rahman-zim-62a973272/)
+- LinkedIn: [Miraz zim](https://www.linkedin.com/in/mirazur-rahman-zim-62a973272/)
 
 ---
 
