@@ -6,7 +6,7 @@ SpeedTalk is a modern, fully responsive real-time messaging web application buil
 ---
 
 ## 🌐 Live Demo  
-- **Frontend**: [SpeedTalk Client](https://speedtalk.onrender.com)
+- **Frontend**: [SpeedTalk](https://speedtalk.onrender.com)
 
 ---
 
