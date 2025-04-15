@@ -1,7 +1,7 @@
 # 🗨️ SpeedTalk — Real-time Messaging Platform  
 🚀 **Connect and chat instantly with anyone, anytime, anywhere.**
 
-SpeedTalk is a modern, fully responsive real-time messaging web application built for seamless communication. With elegant UI, optimized state management, and blazing-fast real-time updates via WebSockets, SpeedTalk offers a feature-rich chatting experience.
+SpeedTalk is a modern, fully responsive real-time messaging web application built for seamless communication. With elegant UI, optimized state management, and blazing-fast real-time updates via WebSockets, SpeedTalk offers a feature-rich chatting experience...
 
 ---
 
